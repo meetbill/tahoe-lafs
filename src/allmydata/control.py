@@ -1,3 +1,13 @@
+"""Ported to Python 3.
+"""
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
+from future.utils import PY2
+if PY2:
+    from future.builtins import filter, map, zip, ascii, chr, hex, input, next, oct, open, pow, round, super, bytes, dict, list, object, range, str, max, min  # noqa: F401
 
 import os, time, tempfile
 from zope.interface import implementer
@@ -65,7 +75,19 @@ class ControlServer(Referenceable, service.Service):
         tempdir = tempfile.mkdtemp()
         filename = os.path.join(tempdir, "data")
         f = open(filename, "wb")
+
+
+        ###################################################################
+        ########
+        #
+        # TODO
+        #
+        # What does coverage look like? Why does nothing fail with "a" vs.
+        # b"a"?
+
         block = "a" * 8192
+
+
         while size > 0:
             l = min(size, 8192)
             f.write(block[:l])
@@ -126,7 +148,7 @@ class ControlServer(Referenceable, service.Service):
         server_name = server.get_longname()
         storage_server = server.get_storage_server()
         start = time.time()
-        d = storage_server.get_buckets("\x00" * 16)
+        d = storage_server.get_buckets(b"\x00" * 16)
         def _done(ignored):
             stop = time.time()
             elapsed = stop - start
@@ -168,11 +190,17 @@ class SpeedTest(object):
             fn = os.path.join(self.basedir, str(i))
             if os.path.exists(fn):
                 os.unlink(fn)
-            f = open(fn, "w")
+            f = open(fn, "wb")
             f.write(os.urandom(8))
             s -= 8
             while s > 0:
                 chunk = min(s, 4096)
+
+                ##############################################
+                ###########
+                #
+                # TODO same here
+
                 f.write("\x00" * chunk)
                 s -= chunk
             f.close()
