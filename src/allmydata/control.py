@@ -85,7 +85,7 @@ class ControlServer(Referenceable, service.Service):
         # What does coverage look like? Why does nothing fail with "a" vs.
         # b"a"?
 
-        block = "a" * 8192
+        block = b"a" * 8192
 
 
         while size > 0:
@@ -201,7 +201,7 @@ class SpeedTest(object):
                 #
                 # TODO same here
 
-                f.write("\x00" * chunk)
+                f.write(b"\x00" * chunk)
                 s -= chunk
             f.close()
 
